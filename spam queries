@@ -1,0 +1,43 @@
+SELECT *
+FROM contact_submissions
+WHERE message REGEXP '[Ѐ-ӿ]'; -- Range for Cyrillic characters
+
+
+SELECT *
+FROM contact_submissions
+WHERE message ~ '[\u0400-\u04FF]+'; -- Range for Cyrillic characters
+
+
+-- Define a list of bad keywords
+WITH BadKeywords AS (
+  SELECT 'error' AS keyword
+  UNION ALL
+  SELECT 'inappropriate'
+  UNION ALL
+  SELECT 'misleading'
+  -- Add more keywords as needed
+)
+
+-- Find sentences containing any of the bad keywords
+SELECT s.sentence_text
+FROM Sentences s
+JOIN BadKeywords bk ON s.sentence_text LIKE '%' || bk.keyword || '%';
+
+
+SELECT *
+FROM contact_submissions
+WHERE message NOT LIKE '% %' -- assuming spam messages might not contain spaces
+   OR message LIKE '%______%' ESCAPE '_' -- repetitive characters (adjust the number of underscores based on your criteria)
+   OR LENGTH(message) < 5; -- very short messages
+
+
+SELECT *
+FROM contact_submissions
+WHERE LOWER(message) SIMILAR TO '%(viagra|free|click here|winner)%'
+   OR LOWER(email) SIMILAR TO '%(viagra|free|winner)%';
+
+SELECT wd.sid, wd.data
+FROM webform_submitted_data wd
+JOIN field_data_field_email fe ON wd.sid = fe.entity_id
+WHERE wd.webform_id = 'contact' -- Assuming 'contact' is the machine name of the webform
+AND fe.field_email_value ~ '[\u0400-\u04FF]+'; -- For PostgreSQL, checks Cyrillic characters in email

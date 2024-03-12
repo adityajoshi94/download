@@ -59,3 +59,15 @@ SELECT
 FROM 
     ipAddresses;
 
+
+select * from webform_submission_data where name =  "email" and value REGEXP '[.].*[.].*@'
+
+select * from webform_submission_data where value like '%coin%';
+
+select * from webform_submission_data where name = "email" and value = "";
+select * from webform_submission_data where value =  "Loremipsum";
+
+select * from webform_submission_data where value =  "Oratione";
+
+select * from webform_submission_data where length(value) < 2;
+select * from webform_submission_data where name = "name" and value = "";

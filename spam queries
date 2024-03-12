@@ -41,3 +41,9 @@ FROM webform_submitted_data wd
 JOIN field_data_field_email fe ON wd.sid = fe.entity_id
 WHERE wd.webform_id = 'contact' -- Assuming 'contact' is the machine name of the webform
 AND fe.field_email_value ~ '[\u0400-\u04FF]+'; -- For PostgreSQL, checks Cyrillic characters in email
+
+
+SELECT ip_address,
+       (ip_address ~ '^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$') AS is_potential_ipv4
+FROM ip_addresses_table;
+
